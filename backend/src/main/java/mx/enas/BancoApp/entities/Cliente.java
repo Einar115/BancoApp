@@ -3,12 +3,13 @@ package mx.enas.BancoApp.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String nombre;
@@ -19,33 +20,39 @@ public class Cliente {
     @Column(length = 15)
     private String telefono;
 
-    @Column(length = 255)
+    @Column(columnDefinition = "TEXT")
     private String direccion;
 
-    @Column(nullable = false)
-    private LocalDateTime fecha_registro=LocalDateTime.now();
+    @Column(name = "fecha_registro", nullable = false, updatable = false)
+    private LocalDateTime fechaRegistro =LocalDateTime.now();
 
     @Column(nullable = false)
     private String Password;
 
+    @OneToMany(targetEntity = Cuenta.class, mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Cuenta> cuentas;
+
+    @OneToMany(targetEntity = Prestamo.class, mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Prestamo> prestamos;
+
     //Contructores
     public Cliente() {}
 
-    public Cliente(String correo, String telefono, String direccion, LocalDateTime fecha_registro, String password, String nombre) {
+    public Cliente(String correo, String telefono, String direccion, LocalDateTime fechaRegistro, String password, String nombre) {
         this.correo = correo;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.fecha_registro = fecha_registro;
+        this.fechaRegistro = fechaRegistro;
         Password = password;
         this.nombre = nombre;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -81,12 +88,12 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public LocalDateTime getFecha_registro() {
-        return fecha_registro;
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setFecha_registro(LocalDateTime fecha_registro) {
-        this.fecha_registro = fecha_registro;
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
     public String getPassword() {
@@ -105,7 +112,7 @@ public class Cliente {
                 ", correo='" + correo + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", direccion='" + direccion + '\'' +
-                ", fecha_registro=" + fecha_registro +
+                ", fecha_registro=" + fechaRegistro +
                 ", Password='" + Password + '\'' +
                 '}';
     }

@@ -3,15 +3,16 @@ package mx.enas.BancoApp.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Cuenta {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
-    @Column(nullable = false, length = 20)
-    private String numero_cuenta;
+    @Column(name = "numero_cuenta", nullable = false, unique = true, length = 20)
+    private String numeroCuenta;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal saldo;
@@ -19,39 +20,47 @@ public class Cuenta {
     @Column(nullable = false, length = 20)
     private String tipo;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String estado="ACTIVA";
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Cliente.class)
     @JoinColumn(name = "cliente_id", nullable = false)
-    private int cliente_id;
+    private Cliente cliente;
+
+    @OneToMany(targetEntity = Transaccion.class, mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaccion> transaccions;
+
+    @OneToMany(targetEntity = Tarjeta.class, mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarjeta> tarjetas;
 
     //Contructores
     public Cuenta() {}
 
-    public Cuenta(String numero_cuenta, BigDecimal saldo, String tipo, String estado, int cliente_id) {
-        this.numero_cuenta = numero_cuenta;
+    public Cuenta(String numeroCuenta, BigDecimal saldo, String tipo, String estado, Cliente cliente, List<Transaccion> transaccions, List<Tarjeta> tarjetas) {
+        this.numeroCuenta = numeroCuenta;
         this.saldo = saldo;
         this.tipo = tipo;
         this.estado = estado;
-        this.cliente_id = cliente_id;
+        this.cliente = cliente;
+        this.transaccions = transaccions;
+        this.tarjetas = tarjetas;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNumero_cuenta() {
-        return numero_cuenta;
+    public String getNumeroCuenta() {
+        return numeroCuenta;
     }
 
-    public void setNumero_cuenta(String numero_cuenta) {
-        this.numero_cuenta = numero_cuenta;
+    public void setNumeroCuenta(String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
     }
 
     public BigDecimal getSaldo() {
@@ -78,23 +87,41 @@ public class Cuenta {
         this.estado = estado;
     }
 
-    public int getCliente_id() {
-        return cliente_id;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setCliente_id(int cliente_id) {
-        this.cliente_id = cliente_id;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<Transaccion> getTransaccions() {
+        return transaccions;
+    }
+
+    public void setTransaccions(List<Transaccion> transaccions) {
+        this.transaccions = transaccions;
+    }
+
+    public List<Tarjeta> getTarjetas() {
+        return tarjetas;
+    }
+
+    public void setTarjetas(List<Tarjeta> tarjetas) {
+        this.tarjetas = tarjetas;
     }
 
     @Override
     public String toString() {
         return "Cuenta{" +
                 "id=" + id +
-                ", numero_cuenta='" + numero_cuenta + '\'' +
+                ", numero_cuenta='" + numeroCuenta + '\'' +
                 ", saldo=" + saldo +
                 ", tipo='" + tipo + '\'' +
                 ", estado='" + estado + '\'' +
-                ", cliente_id=" + cliente_id +
+                ", cliente=" + cliente +
+                ", transaccions=" + transaccions +
+                ", tarjetas=" + tarjetas +
                 '}';
     }
 }

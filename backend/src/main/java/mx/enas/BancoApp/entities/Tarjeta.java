@@ -2,19 +2,20 @@ package mx.enas.BancoApp.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 public class Tarjeta {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false, length = 16)
+    @Column(nullable = false, unique = true, length = 16)
     private String numero_tarjeta;
 
     @Column(nullable = false)
-    private LocalDateTime fecha_expiracion;
+    private LocalDate fecha_expiracion;
 
     @Column(nullable = false, length = 3)
     private String cvv;
@@ -22,27 +23,27 @@ public class Tarjeta {
     @Column(nullable = false, length = 20)
     private String tipo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Cuenta.class)
     @JoinColumn(name = "cuenta_id", nullable = false)
-    private String cuenta_id;
+    private Cuenta cuenta;
 
     //Contructores
     public Tarjeta() {}
 
-    public Tarjeta(String numero_tarjeta, LocalDateTime fecha_expiracion, String cvv, String tipo, String cuenta_id) {
+    public Tarjeta(String numero_tarjeta, LocalDate fecha_expiracion, String cvv, String tipo, Cuenta cuenta) {
         this.numero_tarjeta = numero_tarjeta;
         this.fecha_expiracion = fecha_expiracion;
         this.cvv = cvv;
         this.tipo = tipo;
-        this.cuenta_id = cuenta_id;
+        this.cuenta = cuenta;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,11 +55,11 @@ public class Tarjeta {
         this.numero_tarjeta = numero_tarjeta;
     }
 
-    public LocalDateTime getFecha_expiracion() {
+    public LocalDate getFecha_expiracion() {
         return fecha_expiracion;
     }
 
-    public void setFecha_expiracion(LocalDateTime fecha_expiracion) {
+    public void setFecha_expiracion(LocalDate fecha_expiracion) {
         this.fecha_expiracion = fecha_expiracion;
     }
 
@@ -78,12 +79,12 @@ public class Tarjeta {
         this.tipo = tipo;
     }
 
-    public String getCuenta_id() {
-        return cuenta_id;
+    public Cuenta getCuenta() {
+        return cuenta;
     }
 
-    public void setCuenta_id(String cuenta_id) {
-        this.cuenta_id = cuenta_id;
+    public void setCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
     }
 
     @Override
@@ -94,8 +95,7 @@ public class Tarjeta {
                 ", fecha_expiracion=" + fecha_expiracion +
                 ", cvv='" + cvv + '\'' +
                 ", tipo='" + tipo + '\'' +
-                ", cuenta_id='" + cuenta_id + '\'' +
+                ", cuenta=" + cuenta +
                 '}';
     }
-
 }

@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class Pago_prestamo {
+@Table(name = "pago_prestamo")
+public class PagoPrestamo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal monto;
@@ -17,25 +18,25 @@ public class Pago_prestamo {
     @Column(nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Prestamo.class)
     @JoinColumn(name = "prestamo_id", nullable = false)
-    private int prestamo_id;
+    private Prestamo prestamo;
 
     //Contructores
-    public Pago_prestamo() {}
+    public PagoPrestamo() {}
 
-    public Pago_prestamo(BigDecimal monto, LocalDateTime fecha, int prestamo_id) {
+    public PagoPrestamo(BigDecimal monto, LocalDateTime fecha, Prestamo prestamo) {
         this.monto = monto;
         this.fecha = fecha;
-        this.prestamo_id = prestamo_id;
+        this.prestamo = prestamo;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,22 +56,11 @@ public class Pago_prestamo {
         this.fecha = fecha;
     }
 
-    public int getPrestamo_id() {
-        return prestamo_id;
+    public Prestamo getPrestamo() {
+        return prestamo;
     }
 
-    public void setPrestamo_id(int prestamo_id) {
-        this.prestamo_id = prestamo_id;
+    public void setPrestamo(Prestamo prestamo) {
+        this.prestamo = prestamo;
     }
-
-    @Override
-    public String toString() {
-        return "Pago_prestamo{" +
-                "id=" + id +
-                ", monto=" + monto +
-                ", fecha=" + fecha +
-                ", prestamo_id=" + prestamo_id +
-                '}';
-    }
-
 }

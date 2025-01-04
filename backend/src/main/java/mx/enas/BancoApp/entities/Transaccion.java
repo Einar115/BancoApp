@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Transaccion {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal monto;
@@ -20,29 +20,29 @@ public class Transaccion {
     @Column(nullable = false, length = 20)
     private String tipo;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Cuenta.class)
     @JoinColumn(name = "cuenta_id", nullable = false)
-    private int cuenta_id;
+    private Cuenta cuenta;
 
     //Contructores
     public Transaccion() {}
 
-    public Transaccion(int cuenta_id, String descripcion, String tipo, BigDecimal monto) {
-        this.cuenta_id = cuenta_id;
-        this.descripcion = descripcion;
-        this.tipo = tipo;
+    public Transaccion(BigDecimal monto, String tipo, String descripcion, Cuenta cuenta) {
         this.monto = monto;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+        this.cuenta = cuenta;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -74,12 +74,12 @@ public class Transaccion {
         this.descripcion = descripcion;
     }
 
-    public int getCuenta_id() {
-        return cuenta_id;
+    public Cuenta getCuenta() {
+        return cuenta;
     }
 
-    public void setCuenta_id(int cuenta_id) {
-        this.cuenta_id = cuenta_id;
+    public void setCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
     }
 
     @Override
@@ -90,8 +90,7 @@ public class Transaccion {
                 ", fecha=" + fecha +
                 ", tipo='" + tipo + '\'' +
                 ", descripcion='" + descripcion + '\'' +
-                ", cuenta_id=" + cuenta_id +
+                ", cuenta=" + cuenta +
                 '}';
     }
-
 }

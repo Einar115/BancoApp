@@ -3,13 +3,14 @@ package mx.enas.BancoApp.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Prestamo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal monto;
@@ -17,36 +18,41 @@ public class Prestamo {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal tasa_interes;
 
-    @Column(nullable = false)
-    private final LocalDateTime fecha_inicio=LocalDateTime.now();
+    @Column(name = "fecha_inicio", nullable = false)
+    private LocalDate fechaInicio;
 
-    @Column(nullable = false)
-    private LocalDateTime fecha_vencimiento;
+    @Column(name = "fecha_vencimiento", nullable = false)
+    private LocalDate fechaVencimiento;
 
-    @Column(nullable = false, length = 20)
-    private String estado;
+    @Column(length = 20)
+    private String estado="ACTIVO";
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Cliente.class)
     @JoinColumn(name = "cliente_id", nullable = false)
-    private int cliente_id;
+    private Cliente cliente;
+
+    @OneToMany(targetEntity = PagoPrestamo.class, mappedBy = "prestamo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PagoPrestamo> pagos;
 
     //Contructores
     public Prestamo() {}
 
-    public Prestamo(BigDecimal monto, BigDecimal tasa_interes, LocalDateTime fecha_vencimiento, String estado, int cliente_id) {
+    public Prestamo(BigDecimal monto, BigDecimal tasa_interes, LocalDate fechaInicio, LocalDate fechaVencimiento, String estado, Cliente cliente, List<PagoPrestamo> pagos) {
         this.monto = monto;
         this.tasa_interes = tasa_interes;
-        this.fecha_vencimiento = fecha_vencimiento;
+        this.fechaInicio = fechaInicio;
+        this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
-        this.cliente_id = cliente_id;
+        this.cliente = cliente;
+        this.pagos = pagos;
     }
 
     //Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -66,16 +72,20 @@ public class Prestamo {
         this.tasa_interes = tasa_interes;
     }
 
-    public LocalDateTime getFecha_inicio() {
-        return fecha_inicio;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public LocalDateTime getFecha_vencimiento() {
-        return fecha_vencimiento;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
-    public void setFecha_vencimiento(LocalDateTime fecha_vencimiento) {
-        this.fecha_vencimiento = fecha_vencimiento;
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
     }
 
     public String getEstado() {
@@ -86,12 +96,20 @@ public class Prestamo {
         this.estado = estado;
     }
 
-    public int getCliente_id() {
-        return cliente_id;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setCliente_id(int cliente_id) {
-        this.cliente_id = cliente_id;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<PagoPrestamo> getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(List<PagoPrestamo> pagos) {
+        this.pagos = pagos;
     }
 
     @Override
@@ -100,11 +118,11 @@ public class Prestamo {
                 "id=" + id +
                 ", monto=" + monto +
                 ", tasa_interes=" + tasa_interes +
-                ", fecha_inicio=" + fecha_inicio +
-                ", fecha_vencimiento=" + fecha_vencimiento +
+                ", fecha_inicio=" + fechaInicio +
+                ", fecha_vencimiento=" + fechaVencimiento +
                 ", estado='" + estado + '\'' +
-                ", cliente_id=" + cliente_id +
+                ", cliente=" + cliente +
+                ", pagos=" + pagos +
                 '}';
     }
-
 }
