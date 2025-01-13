@@ -1,7 +1,11 @@
 package mx.enas.BancoApp.repositories;
 
-import mx.enas.BancoApp.entities.Transaccion;
+import mx.enas.BancoApp.model.entities.Transaccion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface TransaccionRepository extends JpaRepository<Transaccion, Long> {
 }
