@@ -1,4 +1,4 @@
-package mx.enas.BancoApp.entities;
+package mx.enas.BancoApp.model.entities;
 
 import jakarta.persistence.*;
 
@@ -24,7 +24,7 @@ public class Cliente {
     private String direccion;
 
     @Column(name = "fecha_registro", nullable = false, updatable = false)
-    private LocalDateTime fechaRegistro =LocalDateTime.now();
+    private LocalDateTime fechaRegistro = LocalDateTime.now();
 
     @Column(nullable = false)
     private String Password;

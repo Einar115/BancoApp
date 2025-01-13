@@ -1,9 +1,8 @@
-package mx.enas.BancoApp.entities;
+package mx.enas.BancoApp.model.entities;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class Tarjeta {

@@ -1,4 +1,4 @@
-package mx.enas.BancoApp.entities;
+package mx.enas.BancoApp.model.entities;
 
 import jakarta.persistence.*;
 
